@@ -1,1 +1,79 @@
 project_id = "cckvkwtlipgcqrywrxni"
+
+[api]
+port = 54321
+schemas = ["public", "storage", "graphql_public"]
+extra_search_path = ["public", "extensions"]
+max_rows = 1000
+
+[db]
+port = 54322
+shadow_port = 54320
+major_version = 15
+
+[db.pooler]
+enabled = false
+port = 54329
+pool_mode = "transaction"
+default_pool_size = 20
+max_client_conn = 100
+
+[realtime]
+enabled = true
+
+[studio]
+port = 54323
+
+[inbucket]
+port = 54324
+smtp_port = 54325
+pop3_port = 54326
+
+[storage]
+port = 54327
+
+[auth]
+port = 54328
+site_url = "http://localhost:5173"
+additional_redirect_urls = ["http://localhost:5173/**", "http://localhost:3000/**"]
+max_request_duration = "10s"
+
+[auth.email]
+enable_signup = true
+double_confirm_changes = true
+enable_confirmations = true
+max_frequency = "1s"
+otp_length = 6
+otp_expiry = 3600
+
+[auth.email.template]
+[auth.email.template.invite]
+subject = "You have been invited"
+[auth.email.template.confirmation]
+subject = "Confirm your signup"
+[auth.email.template.recovery]
+subject = "Reset your password"
+[auth.email.template.magic_link]
+subject = "Your Magic Link"
+[auth.email.template.email_change]
+subject = "Confirm Email Change"
+
+[auth.anonymous]
+enabled = false
+
+[auth.mfa.totp]
+enroll_enabled = true
+verify_enabled = true
+
+[auth.sessions]
+timebox = "24h"
+inactivity_timeout = "8h"
+
+[edge_runtime]
+port = 54330
+inspector_port = 54331
+
+[analytics]
+enabled = true
+port = 54337
+gcp_jwt_path = ""
