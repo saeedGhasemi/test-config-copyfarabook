@@ -37,10 +37,10 @@ interface Book {
 }
 
 const ambientSrc: Record<string, string> = {
-  rain: "https://cdn.pixabay.com/audio/2022/03/15/audio_e1bf6db78f.mp3",
-  forest: "https://cdn.pixabay.com/audio/2022/02/07/audio_5cab6f9395.mp3",
-  cafe: "https://cdn.pixabay.com/audio/2022/03/09/audio_d8c80cd3e8.mp3",
-  night: "https://cdn.pixabay.com/audio/2022/10/30/audio_347111d662.mp3",
+  rain: "/seed-audio/rain.mp3",
+  forest: "/seed-audio/forest.mp3",
+  cafe: "/seed-audio/cafe.mp3",
+  night: "/seed-audio/night.mp3",
 };
 
 type AiMode = "summary" | "quiz" | "mindmap" | "explain" | "timeline";
