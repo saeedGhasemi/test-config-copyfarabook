@@ -1311,9 +1311,9 @@ END; $$;
 -- =========================================================================
 -- STORAGE BUCKETS + POLICIES
 -- =========================================================================
-INSERT INTO storage.buckets (id, name, public) VALUES ('book-uploads', 'book-uploads', false)
+INSERT INTO storage.buckets (id, name) VALUES ('book-uploads', 'book-uploads')
   ON CONFLICT (id) DO NOTHING;
-INSERT INTO storage.buckets (id, name, public) VALUES ('book-media', 'book-media', true)
+INSERT INTO storage.buckets (id, name) VALUES ('book-media', 'book-media')
   ON CONFLICT (id) DO NOTHING;
 
 -- book-uploads: per-user folder (uid as first path segment)
