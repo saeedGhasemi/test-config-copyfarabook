@@ -1,6 +1,6 @@
 -- Storage bucket for word document uploads
-INSERT INTO storage.buckets (id, name, public)
-VALUES ('book-uploads', 'book-uploads', false)
+INSERT INTO storage.buckets (id, name)
+VALUES ('book-uploads', 'book-uploads')
 ON CONFLICT (id) DO NOTHING;
 
 -- RLS policies: each user owns their own folder (auth.uid() = first folder name)

@@ -1,7 +1,7 @@
 -- Public bucket for extracted book media (images from docx imports)
-INSERT INTO storage.buckets (id, name, public)
-VALUES ('book-media', 'book-media', true)
-ON CONFLICT (id) DO UPDATE SET public = true;
+INSERT INTO storage.buckets (id, name)
+VALUES ('book-media', 'book-media')
+ON CONFLICT (id) DO NOTHING;
 
 -- Public read; only authenticated users can write into their own folder
 DROP POLICY IF EXISTS "book-media public read" ON storage.objects;
