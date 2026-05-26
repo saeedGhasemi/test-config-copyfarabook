@@ -30,13 +30,10 @@ smtp_port = 54325
 pop3_port = 54326
 
 [storage]
-port = 54327
 
 [auth]
-port = 54328
 site_url = "http://localhost:5173"
 additional_redirect_urls = ["http://localhost:5173/**", "http://localhost:3000/**"]
-max_request_duration = "10s"
 
 [auth.email]
 enable_signup = true
@@ -58,8 +55,6 @@ subject = "Your Magic Link"
 [auth.email.template.email_change]
 subject = "Confirm Email Change"
 
-[auth.anonymous]
-enabled = false
 
 [auth.mfa.totp]
 enroll_enabled = true
@@ -70,7 +65,6 @@ timebox = "24h"
 inactivity_timeout = "8h"
 
 [edge_runtime]
-port = 54330
 inspector_port = 54331
 
 [analytics]
