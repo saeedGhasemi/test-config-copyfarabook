@@ -68,6 +68,4 @@ inactivity_timeout = "8h"
 inspector_port = 54331
 
 [analytics]
-enabled = true
-port = 54337
-gcp_jwt_path = ""
+enabled = false
