@@ -10,6 +10,14 @@
    npm install -g supabase
    ```
 
+### سازگاری نسخه‌های شما
+
+نسخه‌های زیر با هم ناسازگاری مستقیم ندارند:
+- Docker Desktop `4.75.0` / Docker Engine `29.5.2`
+- Supabase CLI `2.101.0`
+
+خطای `supabase_analytics` یا `supabase_vector ... unhealthy` معمولاً از سرویس لاگ/آنالیتیکس لوکال می‌آید، نه از خود دیتابیس یا برنامه. در این پروژه آن سرویس در `supabase/config.toml` غیرفعال شده است تا روی Windows Server + WSL2 مانع بالا آمدن محیط لوکال نشود.
+
 ## مراحل راه‌اندازی
 
 ### ۱. کلون پروژه
@@ -18,6 +26,14 @@ cd /path/to/project
 ```
 
 ### ۲. راه‌اندازی Supabase لوکال
+اگر قبلاً خطای container unhealthy گرفته‌اید، ابتدا کانتینرها و volumeهای قبلی همین پروژه را پاک کنید:
+
+```bash
+supabase stop --no-backup
+```
+
+سپس دوباره اجرا کنید:
+
 ```bash
 supabase start
 ```
@@ -25,6 +41,30 @@ supabase start
 - Postgres لوکال را روی پورت `54322` بالا می‌آورد
 - API را روی `54321` فعال می‌کند
 - Studio (داشبورد) را روی `54323` اجرا می‌کند
+
+اگر پروژه داخل مسیر `/mnt/c/...` است و Docker خطای mount یا unhealthy داد، بهتر است پروژه را داخل فایل‌سیستم Ubuntu کپی کنید؛ مثلاً:
+
+```bash
+cp -r /mnt/c/Users/Administrator/Documents/GitHub/test-config-copyfarabook ~/test-config-copyfarabook
+cd ~/test-config-copyfarabook
+supabase stop --no-backup
+supabase start
+```
+
+در Docker Desktop هم مطمئن شوید WSL Integration برای توزیع Ubuntu فعال است.
+
+### ۲.۱ اتصال فرانت‌اند به Supabase لوکال
+فایل `.env` پروژه برای نسخه آنلاین تنظیم شده است. برای اجرای کاملاً لوکال، یک فایل `.env.local` بسازید تا Vite از بک‌اند لوکال استفاده کند:
+
+```bash
+cp .env.local.example .env.local
+```
+
+بعد از اجرای موفق `supabase start`، مقدار `ANON_KEY` را از خروجی دستور زیر بردارید و در `.env.local` جلوی `VITE_SUPABASE_PUBLISHABLE_KEY` قرار دهید:
+
+```bash
+supabase status
+```
 
 ### ۳. اجرای Migrationها
 Migrationها به طور خودکار با `supabase start` اجرا می‌شوند. اگر نیاز به ریست داشتید:
@@ -45,6 +85,12 @@ psql postgresql://postgres:postgres@localhost:54322/postgres -f supabase/seed.sq
 ```bash
 npm install
 npm run dev
+```
+
+اگر از داخل WSL اجرا می‌کنید و می‌خواهید از ویندوز هم باز شود:
+
+```bash
+npm run dev -- --host 0.0.0.0
 ```
 
 ## اکانت‌های تست
