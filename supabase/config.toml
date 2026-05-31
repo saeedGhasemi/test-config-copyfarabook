@@ -30,6 +30,12 @@ smtp_port = 54325
 pop3_port = 54326
 
 [storage]
+enabled = true
+file_size_limit = "50MiB"
+
+[storage.image_transformation]
+enabled = false
+
 
 [auth]
 site_url = "http://localhost:5173"
