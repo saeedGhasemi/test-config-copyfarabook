@@ -60,7 +60,7 @@ supabase start
 cp .env.local.example .env.local
 ```
 
-بعد از اجرای موفق `supabase start`، مقدار `ANON_KEY` را از خروجی دستور زیر بردارید و در `.env.local` جلوی `VITE_SUPABASE_PUBLISHABLE_KEY` قرار دهید:
+بعد از اجرای موفق `supabase start`، در نسخه‌های جدید CLI مقدار **Publishable key** را از خروجی دستور زیر بردارید و در `.env.local` جلوی `VITE_SUPABASE_PUBLISHABLE_KEY` قرار دهید. اگر خروجی شما هنوز `anon key` نشان می‌دهد، همان مقدار را بگذارید:
 
 ```bash
 supabase status
@@ -80,6 +80,14 @@ psql postgresql://postgres:postgres@localhost:54322/postgres -f supabase/seed.sq
 - به `http://localhost:54323` بروید
 - SQL Editor را باز کنید
 - محتوای `supabase/seed.sql` را paste و Run کنید
+
+اگر صفحهٔ اول فقط هدر/فوتر نشان می‌دهد، به پایین اسکرول نمی‌شود یا ورود سریع کاربران تستی خطای رمز می‌دهد، یعنی seed کامل اجرا نشده است. در این حالت این دستورها را به‌ترتیب اجرا کنید:
+
+```bash
+supabase db reset
+psql postgresql://postgres:postgres@localhost:54322/postgres -f supabase/seed.sql
+npm run dev
+```
 
 ### ۵. اجرای فرانت‌اند
 ```bash

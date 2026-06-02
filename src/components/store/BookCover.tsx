@@ -6,6 +6,17 @@ import { useAutoCover } from "@/hooks/useAutoCover";
 import { resolveBookCover } from "@/lib/book-media";
 import { cn } from "@/lib/utils";
 
+const fallbackCovers = [
+  "/seed-images/book-boof.svg",
+  "/seed-images/book-prince.svg",
+  "/seed-images/quantum1.svg",
+  "/seed-images/cell1.svg",
+  "/seed-images/nowruz.svg",
+  "/seed-images/art1.svg",
+  "/seed-images/heart.svg",
+  "/seed-images/kid1.svg",
+];
+
 interface Props {
   bookId: string;
   cover: string | null | undefined;
@@ -18,7 +29,8 @@ interface Props {
 }
 
 export function BookCover({ bookId, cover, title, width = 480, quality = 70, className, loading = "lazy", sizes }: Props) {
-  const url = useAutoCover(bookId, cover);
+  const fallback = fallbackCovers[Math.abs([...bookId].reduce((sum, ch) => sum + ch.charCodeAt(0), 0)) % fallbackCovers.length];
+  const url = useAutoCover(bookId, cover || fallback);
   const initial = (title || "?").trim().charAt(0).toUpperCase();
   if (!url) {
     return (
@@ -36,6 +48,11 @@ export function BookCover({ bookId, cover, title, width = 480, quality = 70, cla
       alt={title}
       loading={loading}
       decoding="async"
+      onError={(event) => {
+        event.currentTarget.onerror = null;
+        event.currentTarget.removeAttribute("srcset");
+        event.currentTarget.src = fallback;
+      }}
       width={width}
       height={Math.round(width * 4 / 3)}
       sizes={sizes}
