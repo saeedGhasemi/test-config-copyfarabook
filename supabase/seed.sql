@@ -20,6 +20,21 @@ INSERT INTO auth.users (id, instance_id, aud, role, email, encrypted_password, e
 VALUES ('44444444-4444-4444-4444-444444444444', '00000000-0000-0000-0000-000000000000', 'authenticated', 'authenticated', 'editor1@test.com', crypt('Test1234!', gen_salt('bf', 10)), now(), '', '', '', '', '', '', '', '', '{"provider":"email","providers":["email"]}', '{"display_name": "\u0627\u062f\u06cc\u062a\u0648\u0631 \u062a\u0633\u062a"}', now(), now(), now(), now(), false, false)
 ON CONFLICT (id) DO UPDATE SET aud = EXCLUDED.aud, role = EXCLUDED.role, encrypted_password = EXCLUDED.encrypted_password, email_confirmed_at = EXCLUDED.email_confirmed_at, confirmation_token = EXCLUDED.confirmation_token, recovery_token = EXCLUDED.recovery_token, email_change_token_new = EXCLUDED.email_change_token_new, email_change = EXCLUDED.email_change, email_change_token_current = EXCLUDED.email_change_token_current, phone_change = EXCLUDED.phone_change, phone_change_token = EXCLUDED.phone_change_token, reauthentication_token = EXCLUDED.reauthentication_token, raw_app_meta_data = EXCLUDED.raw_app_meta_data, raw_user_meta_data = EXCLUDED.raw_user_meta_data, is_sso_user = false, is_anonymous = false, banned_until = NULL, deleted_at = NULL;
 
+UPDATE auth.users
+SET confirmation_token = COALESCE(confirmation_token, ''),
+    recovery_token = COALESCE(recovery_token, ''),
+    email_change_token_new = COALESCE(email_change_token_new, ''),
+    email_change = COALESCE(email_change, ''),
+    email_change_token_current = COALESCE(email_change_token_current, ''),
+    phone_change = COALESCE(phone_change, ''),
+    phone_change_token = COALESCE(phone_change_token, ''),
+    reauthentication_token = COALESCE(reauthentication_token, ''),
+    is_sso_user = COALESCE(is_sso_user, false),
+    is_anonymous = COALESCE(is_anonymous, false),
+    banned_until = NULL,
+    deleted_at = NULL
+WHERE email IN ('user1@test.com','user2@test.com','publisher1@test.com','editor1@test.com');
+
 -- auth identities (provider_id MUST equal email for provider='email' in modern GoTrue)
 INSERT INTO auth.identities (id, user_id, provider_id, identity_data, provider, last_sign_in_at, created_at, updated_at)
 SELECT '11111111-1111-1111-1111-111111111111', '11111111-1111-1111-1111-111111111111', 'user1@test.com', '{"sub":"11111111-1111-1111-1111-111111111111","email":"user1@test.com","email_verified":true,"phone_verified":false}'::jsonb, 'email', now(), now(), now()
