@@ -40,7 +40,12 @@ const Auth = () => {
         if (error) throw error;
       }
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : "Error");
+      const message = err instanceof Error ? err.message : "Error";
+      toast.error(message.includes("Invalid login credentials")
+        ? lang === "fa"
+          ? "ایمیل یا رمز اشتباه است. در لوکال اول seed را اجرا کنید و مطمئن شوید .env.local به API لوکال وصل است."
+          : "Invalid email or password. For local dev, run the seed and make sure .env.local points to the local API."
+        : message);
     } finally {
       setBusy(false);
     }
@@ -115,7 +120,12 @@ const Auth = () => {
                         });
                         if (error) throw error;
                       } catch (err) {
-                        toast.error(err instanceof Error ? err.message : "Error");
+                        const message = err instanceof Error ? err.message : "Error";
+                        toast.error(message.includes("Invalid login credentials")
+                          ? lang === "fa"
+                            ? "کاربر تستی پیدا نشد یا رمز آن ساخته نشده؛ دستور seed لوکال را دوباره اجرا کنید."
+                            : "Test user not found or password is missing; run the local seed again."
+                          : message);
                       } finally {
                         setBusy(false);
                       }
