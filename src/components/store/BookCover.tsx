@@ -29,7 +29,8 @@ interface Props {
 }
 
 export function BookCover({ bookId, cover, title, width = 480, quality = 70, className, loading = "lazy", sizes }: Props) {
-  const url = useAutoCover(bookId, cover);
+  const fallback = fallbackCovers[Math.abs([...bookId].reduce((sum, ch) => sum + ch.charCodeAt(0), 0)) % fallbackCovers.length];
+  const url = useAutoCover(bookId, cover || fallback);
   const initial = (title || "?").trim().charAt(0).toUpperCase();
   if (!url) {
     return (
@@ -40,7 +41,6 @@ export function BookCover({ bookId, cover, title, width = 480, quality = 70, cla
   }
   const small = Math.round(width * 0.7);
   const large = Math.round(width * 1.5);
-  const fallback = fallbackCovers[Math.abs([...bookId].reduce((sum, ch) => sum + ch.charCodeAt(0), 0)) % fallbackCovers.length];
   return (
     <img
       src={resolveBookCover(url, { width, quality })}
