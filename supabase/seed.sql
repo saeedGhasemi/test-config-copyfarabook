@@ -19,19 +19,25 @@ INSERT INTO auth.users (id, instance_id, email, encrypted_password, email_confir
 VALUES ('44444444-4444-4444-4444-444444444444', '00000000-0000-0000-0000-000000000000', 'editor1@test.com', crypt('Test1234!', gen_salt('bf', 10)), now(), '{"provider":"email","providers":["email"]}', '{"display_name": "\u0627\u062f\u06cc\u062a\u0648\u0631 \u062a\u0633\u062a"}', now(), now(), now(), false)
 ON CONFLICT (id) DO UPDATE SET encrypted_password = EXCLUDED.encrypted_password, email_confirmed_at = EXCLUDED.email_confirmed_at, raw_user_meta_data = EXCLUDED.raw_user_meta_data;
 
--- auth identities (skip if already present; avoid ON CONFLICT since PK shape varies across GoTrue versions)
+-- auth identities (provider_id MUST equal email for provider='email' in modern GoTrue)
 INSERT INTO auth.identities (id, user_id, provider_id, identity_data, provider, last_sign_in_at, created_at, updated_at)
-SELECT '11111111-1111-1111-1111-111111111111', '11111111-1111-1111-1111-111111111111', '11111111-1111-1111-1111-111111111111', '{"sub":"11111111-1111-1111-1111-111111111111","email":"user1@test.com"}'::jsonb, 'email', now(), now(), now()
+SELECT '11111111-1111-1111-1111-111111111111', '11111111-1111-1111-1111-111111111111', 'user1@test.com', '{"sub":"11111111-1111-1111-1111-111111111111","email":"user1@test.com","email_verified":true,"phone_verified":false}'::jsonb, 'email', now(), now(), now()
 WHERE NOT EXISTS (SELECT 1 FROM auth.identities WHERE user_id = '11111111-1111-1111-1111-111111111111' AND provider = 'email');
 INSERT INTO auth.identities (id, user_id, provider_id, identity_data, provider, last_sign_in_at, created_at, updated_at)
-SELECT '22222222-2222-2222-2222-222222222222', '22222222-2222-2222-2222-222222222222', '22222222-2222-2222-2222-222222222222', '{"sub":"22222222-2222-2222-2222-222222222222","email":"user2@test.com"}'::jsonb, 'email', now(), now(), now()
+SELECT '22222222-2222-2222-2222-222222222222', '22222222-2222-2222-2222-222222222222', 'user2@test.com', '{"sub":"22222222-2222-2222-2222-222222222222","email":"user2@test.com","email_verified":true,"phone_verified":false}'::jsonb, 'email', now(), now(), now()
 WHERE NOT EXISTS (SELECT 1 FROM auth.identities WHERE user_id = '22222222-2222-2222-2222-222222222222' AND provider = 'email');
 INSERT INTO auth.identities (id, user_id, provider_id, identity_data, provider, last_sign_in_at, created_at, updated_at)
-SELECT '33333333-3333-3333-3333-333333333333', '33333333-3333-3333-3333-333333333333', '33333333-3333-3333-3333-333333333333', '{"sub":"33333333-3333-3333-3333-333333333333","email":"publisher1@test.com"}'::jsonb, 'email', now(), now(), now()
+SELECT '33333333-3333-3333-3333-333333333333', '33333333-3333-3333-3333-333333333333', 'publisher1@test.com', '{"sub":"33333333-3333-3333-3333-333333333333","email":"publisher1@test.com","email_verified":true,"phone_verified":false}'::jsonb, 'email', now(), now(), now()
 WHERE NOT EXISTS (SELECT 1 FROM auth.identities WHERE user_id = '33333333-3333-3333-3333-333333333333' AND provider = 'email');
 INSERT INTO auth.identities (id, user_id, provider_id, identity_data, provider, last_sign_in_at, created_at, updated_at)
-SELECT '44444444-4444-4444-4444-444444444444', '44444444-4444-4444-4444-444444444444', '44444444-4444-4444-4444-444444444444', '{"sub":"44444444-4444-4444-4444-444444444444","email":"editor1@test.com"}'::jsonb, 'email', now(), now(), now()
+SELECT '44444444-4444-4444-4444-444444444444', '44444444-4444-4444-4444-444444444444', 'editor1@test.com', '{"sub":"44444444-4444-4444-4444-444444444444","email":"editor1@test.com","email_verified":true,"phone_verified":false}'::jsonb, 'email', now(), now(), now()
 WHERE NOT EXISTS (SELECT 1 FROM auth.identities WHERE user_id = '44444444-4444-4444-4444-444444444444' AND provider = 'email');
+
+-- Fix any previously-seeded identities that used uuid as provider_id
+UPDATE auth.identities SET provider_id = 'user1@test.com'      WHERE user_id = '11111111-1111-1111-1111-111111111111' AND provider = 'email' AND provider_id <> 'user1@test.com';
+UPDATE auth.identities SET provider_id = 'user2@test.com'      WHERE user_id = '22222222-2222-2222-2222-222222222222' AND provider = 'email' AND provider_id <> 'user2@test.com';
+UPDATE auth.identities SET provider_id = 'publisher1@test.com' WHERE user_id = '33333333-3333-3333-3333-333333333333' AND provider = 'email' AND provider_id <> 'publisher1@test.com';
+UPDATE auth.identities SET provider_id = 'editor1@test.com'    WHERE user_id = '44444444-4444-4444-4444-444444444444' AND provider = 'email' AND provider_id <> 'editor1@test.com';
 
 
 -- profiles
