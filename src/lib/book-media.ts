@@ -54,7 +54,48 @@ const mediaMap: Record<string, string> = {
   "path-marrow-biopsy": pathMarrowBiopsy,
 };
 
-export const resolveBookMedia = (src: string | null | undefined) => (src ? mediaMap[src] || src : "");
+const picsumSeedMap: Record<string, string> = {
+  "101": "/seed-images/planet1.svg",
+  "102": "/seed-images/bio1.svg",
+  "103": "/seed-images/quantum1.svg",
+  "104": "/seed-images/earth.svg",
+  "105": "/seed-images/physics1.svg",
+  "201": "/seed-images/nowruz.svg",
+  "202": "/seed-images/calligraphy.svg",
+  "203": "/seed-images/art1.svg",
+  "204": "/seed-images/iran1.svg",
+  "301": "/seed-images/wrestle1.svg",
+  "302": "/seed-images/tactic.svg",
+  "303": "/seed-images/health.svg",
+  "401": "/seed-images/conic.svg",
+  "402": "/seed-images/calc.svg",
+  "403": "/seed-images/bigchart.svg",
+  "501": "/seed-images/iran2.svg",
+  "502": "/seed-images/cell1.svg",
+  "503": "/seed-images/book-boof.svg",
+  "504": "/seed-images/cloud1.svg",
+  "601": "/seed-images/heart.svg",
+  "602": "/seed-images/bio2.svg",
+  "603": "/seed-images/herb1.svg",
+  "701": "/seed-images/tehran1.svg",
+  "702": "/seed-images/cafe.svg",
+  "703": "/seed-images/art2.svg",
+  "704": "/seed-images/cafe.svg",
+  "705": "/seed-images/river.svg",
+  "801": "/seed-images/animal.svg",
+  "802": "/seed-images/dark.svg",
+  "820": "/seed-images/kid1.svg",
+  "999": "/seed-images/stats.svg",
+};
+
+export const resolveBookMedia = (src: string | null | undefined) => {
+  if (!src) return "";
+  const mapped = mediaMap[src];
+  if (mapped) return mapped;
+  const picsumSeed = src.match(/picsum\.photos\/seed\/([^/]+)/)?.[1];
+  if (picsumSeed && picsumSeedMap[picsumSeed]) return picsumSeedMap[picsumSeed];
+  return src;
+};
 
 /**
  * For images stored in Supabase Storage, request an on-the-fly resized
