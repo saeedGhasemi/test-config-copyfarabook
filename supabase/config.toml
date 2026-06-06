@@ -39,7 +39,7 @@ enabled = false
 
 [auth]
 site_url = "http://localhost:5173"
-additional_redirect_urls = ["http://localhost:5173/**", "http://localhost:3000/**"]
+additional_redirect_urls = ["http://localhost:5173/**", "http://localhost:3000/**", "http://*:5173/**", "http://*:3000/**"]
 
 [auth.email]
 enable_signup = true
